@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <style>
+        ::placeholder{color: green;}
+    </style>
+</head>
+<body style="background-color:#1C1C1C">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" style="padding-top:0px; padding-bottom:0px">
+         <div class="container-fluid" style="background-color:#5B5B5B;" >
+              <div class="collapse navbar-collapse" id="navbarNav"  >
+                   <ul class="nav nav-underline" >
+                       <li class="nav-item">
+                           <a class="nav-link" aria-current="page" style="color:#A4A4A4"
+                              href="{% url 'pybo:question_create' %}">お知らせ登録</a> <!--공지 등록-->
+                       </li>
+                   </ul>
+              </div>
+         </div>
+    </nav>
+    <div class="row">
+        <div class="col-1" style="background-color:#2E2E2E; border-color:#424242; border-width:3px; height: 87vh; padding-left: 18px;padding-right: 6px;">
+            <ul class="nav flex-column nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#" style="background-color:#324259;" >お知らせ一覧</a> <!--공지 목록-->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pybo:question_create' %}" style="color:#A4A4A4">お知らせ登録</a> <!--공지 등록-->
+                </li>
+            </ul>
+        </div>
+        <div class="col-9">
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                 <ol class="breadcrumb">
+                      <li class="breadcrumb-item" ><a href="{% url 'pybo:index' %}" style="color:#A4A4A4">ホーム</a></li> <!--홈-->
+                      <li class="breadcrumb-item active" aria-current="page" style="color:#A4A4A4">お知らせ一覧</li> <!--공지 목록-->
+                 </ol>
+            </nav>
+            <div style="text-align:left; margin-top: 30px; margin-left:10%">
+                    <div id="current_date" style="margin-top: 50px; text-align: end; color:#A4A4A4; ">
+                        <script>
+                            date = new Date();
+                            year = date.getFullYear();
+                            month = ('0' + (date.getMonth() + 1)).slice(-2); // 월이 한 자리 수일 때 앞에 0 추가
+                            day = ('0' + date.getDate()).slice(-2);
+                            const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+                            const dayOfWeek = daysOfWeek[date.getDay()];
+                            document.getElementById("current_date").innerHTML = year + "年" + month + "月" + day + "日 (" + dayOfWeek + ")";
+                        </script>
+                    </div>
+                    <h1 style="color:#A4A4A4">お知らせ一覧</h1><!--공지일람-->
+                </div>
+            <div class="container" style="justify-content: center; margin-left:10%;">
+                <table class="table" style="margin-top:20px;">
+                    <thead>
+                        <tr class="text-center table" >
+                            <th style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">no</th>
+                            <th style="width:30%; background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">タイトル</th>
+                            <th style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">公開方式</th>
+                            <th style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">発信日</th>
+                            <th style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">満了日</th>
+                            <th style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">通知</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if question_list %}
+                        {% for question in question_list %}
+                        <tr class="text-center" >
+                            <td style="background-color:#5B5B5B; color: #A4A4A4; border-color:#A4A4A4;">
+                                <!--번호-->
+                                {{ question_list.start_index|add:forloop.counter0 }}
+                            </td>
+                            <td class="text-start" style="background-color:#5B5B5B; color: #A4A4A4; border-color:#A4A4A4;" >
+                                <a href="{% url 'pybo:detail' question.id %}" style="color:#51CFA1">{{ question.subject }}</a>
+                            </td>
+                            <td class="text-center" style="background-color:#5B5B5B; color: #A4A4A4; border-color:#A4A4A4;"> <!-- 공개 방식 -->
+                                {% if question.public_method == 'time' %}
+                                    <span>時刻公開</span>
+                                {% elif question.public_method == 'immediate' %}
+                                    <span>すぐに公開</span>
+                                {% elif question.public_method == 'hold' %}
+                                    <span>保留</span>
+                                {% else %}
+                                    <span>保留</span>
+                                {% endif %}
+                            </td>
+                            <td style="background-color:#5B5B5B; color: #A4A4A4; border-color:#A4A4A4;">{{ question.issued_date|default:"未定" }}</td>
+                            <td style="background-color:#5B5B5B; color: #A4A4A4; border-color:#A4A4A4;">{{ question.expiry_date|default:"未定" }}</td>
+                            <td class="text-center" style="background-color:#5B5B5B; color: #A4A4A4; border-color:#A4A4A4;">
+                                {% if question.push == 'push-on' %}
+                                    <span>通知する</span>
+                                {% elif question.push == 'push-off' %}
+                                    <span>通知しない</span>
+                                {% endif %}
+                            </td> <!-- 통지 여부 -->
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6">공지사항이 없습니다.</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                <!-- 페이징처리 시작 -->
+                <ul class="pagination justify-content-center" style="position: fixed; bottom: 0; margin-left:32%" >
+                    <!-- 이전페이지 -->
+                    {% if question_list.has_previous %}
+                    <li class="page-item" >
+                        <a class="page-link" href="?page={{ question_list.previous_page_number }}"
+                           style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">前</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" tabindex="-1" aria-disabled="true" href="#"
+                           style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">前</a>
+                    </li>
+                    {% endif %}
+                    <!-- 페이지리스트 -->
+                    {% for page_number in question_list.paginator.page_range %}
+                    {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+                    {% if page_number == question_list.number %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="?page={{ page_number }}"
+                            style="background-color:#324259; color: #A4A4A4; border-color:#424242;">{{ page_number }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_number }}"
+                           style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">{{ page_number }}</a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    <!-- 다음페이지 -->
+                    {% if question_list.has_next %}
+                    <li class="page-item" >
+                        <a class="page-link" href="?page={{ question_list.next_page_number }}"
+                           style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">次</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" tabindex="-1" aria-disabled="true" href="#"
+                        style="background-color:#2E2E2E; color: #A4A4A4; border-color:#424242;">次</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <!-- 페이징처리 끝 -->
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DateTimePicker CSS -->
+    <link href="/static/data/jquery.datetimepicker.min.css" rel="stylesheet">
+    <!-- DateTimePicker JS -->
+    <script src="/static/data/jquery.datetimepicker.full.js"></script>
+
+
+
+    <title>お知らせ登録</title>
+    <link rel="icon" href="/static/img/gngs.png" type="image/png">
+
+</head>
+
+<body>
+    <style>
+        html,
+        body {
+            overflow-x: hidden;
+        }
+    </style>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"
+        style="padding-top: 0px;padding-bottom: 0px; height: 64px; background : linear-gradient(to bottom right, #3cd4fa, #2391d6); border-bottom: 1px solid #dcdcdc;">
+        <!-- margin-bottom: 5px;"-->
+        <div class="container-fluid row" style="height: 55px;padding-right: 12px;padding-left: 12px;">
+            <div class="col-2" style="width: 69px;">
+                <img class="icon" alt="アイコン" src="/static/img/gngs.png" style="width: 48px; padding-top: 5px;">
+            </div>
+            <div class="col-3" style="margin-top: 15px;">
+                <h5 style="width: 350px; color: white;">G&G Service 社内管理システム</h5>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-1"></div>
+            <div class="col-4"></div>
+            <div class="col-1" style="color: white;">
+                {% if user.is_authenticated %}
+                <div>
+                    <span>{{ user.username }}</span> 様
+                </div>
+                {% endif %}
+            </div>
+            <!-- <div class="col-2" style="color: white;">前回のログイン : yyyy/MM/dd HH:mm</div> -->
+            <div class="col-1">
+                <ul class="nav flex-column" style="font-size: 20px; text-align: center;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}" style="color: white;">
+                            <img src="/static/img/logout.svg" alt="アイコン" style="width: 16px;">
+                            ログアウト</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"
+        style="padding-bottom: 8px; padding-top: 0px; border-bottom: 1px solid #dcdcdc;">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav" style="height: 50px;">
+                <ul class="navbar-nav">
+                    <li class="nav-item" style="display: flex;">
+                        <a class="nav-link active" aria-current="page">
+                            <img src="/static/img/grid.svg" alt="アイコン" style="width: 24px;">お知らせ管理</a>
+                        <a class="nav-link active" aria-current="page">
+                            <img src="/static/img/regist.svg" alt="アイコン" style="width: 24px;">お知らせ登録</a>
+                        <a class="nav-link active" aria-current="page">
+                            <img src="/static/img/list.svg" alt="アイコン" style="width: 24px;">お知らせ一覧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row" style="height: 822px;">
+        <div class="col-2"
+            style="padding-top: 15px; border-right: 1px solid #dcdcdc; padding-top: 0px; padding-right: 0px;">
+            <ul class="nav flex-column" style="font-size: 20px; text-align: center;">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'list' %}" style="color: gray;">お知らせ一覧</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'regist' %}">お知らせ登録</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-10" style="margin-top: 0px;  background: linear-gradient(to bottom right, #e0ffff, honeydew);">
+            <div class="list-group"></div>
+            <nav style="--bs-breadcrumb-divider: '>'; padding-top: 15px;" aria-label="breadcrumb">
+                <ol class="breadcrumb" style=" border-bottom: 1px solid #dcdcdc;">
+                    <li class="breadcrumb-item active" aria-current="page">ホーム</li>
+                    <li class="breadcrumb-item active" aria-current="page">お知らせ管理</li>
+                    <li class="breadcrumb-item active" aria-current="page">お知らせ登録</li>
+                </ol><br>
+            </nav>
+            <!-- 追加：日付表示 -->
+            <div class="current-date" id="current-date"
+                style="text-align: right; font-size: 24px; padding-right: 50px;"></div>
+            <h3> <img src="/static/img/regist.svg" alt="アイコン" style="width: 24px; margin-left: 64px;"> お知らせ登録</h3><br>
+            <form id="notification-form" method="post" action="{% url 'regist' %}" onsubmit="return validateForm()" name="notice">
+                {% csrf_token %}
+                <div class="card" style="width: 90%;margin-left: 64px; margin-right: 64px;">
+                    <div class="card-body">
+                        <p class="h4" style="text-align: center;">
+                            基本情報
+                        </p>
+                        <div class="container">
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-2" style="text-align: right; font-weight: bold;">
+                                    <label for="title">タイトル</label>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="badge bg-danger">必須</span>
+                                </div>
+                                <div class="col-9">
+                                    <div class="input-group flex-nowrap">
+                                        <input type="text" id="title" name="title" class="form-control"
+                                            placeholder="タイトルを入力してください。" aria-label="Username"
+                                            aria-describedby="addon-wrapping" style="margin-bottom: 15px;">
+                                    </div>
+                                    <span id="titleError" class="error-message" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-2" style="text-align: right;font-weight: bold;height: 53px;">
+                                    <label>公開方式</label>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="badge bg-danger">必須</span>
+                                </div>
+                                <div class="col-9" style="margin-bottom: 15px;">
+                                    <input class="form-check-input" type="radio" id="time" name="publication_method"
+                                        value="time" required checked>
+                                    <label for="time" style="margin-right: 15px;">時刻公開</label>
+
+                                    <input class="form-check-input" type="radio" id="immediate"
+                                        name="publication_method" value="immediate" required>
+                                    <label for="immediate" style="margin-right: 15px;">すぐ公開</label>
+
+                                    <input class="form-check-input" type="radio" id="hold" name="publication_method"
+                                        value="hold" required>
+                                    <label for="hold" style="margin-right: 15px;">保留</label>
+                                </div>
+                            </div>
+
+                            <div class="row" id="issued_date-group" style="margin-top: 15px;">
+                                <div class="col-2" style="text-align: right; font-weight: bold;">
+                                    <label for="issued_date">発信日</label>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="badge bg-danger">必須</span>
+                                </div>
+                                <div class="col-9">
+                                    <div class="input-group flex-nowrap">
+                                        <input type="text" id="issued_date" name="issued_date"
+                                            class="form-control datetimepicker" placeholder="発信日を入力してください。"
+                                            aria-label="Username" aria-describedby="addon-wrapping"
+                                            style="margin-bottom: 15px;">
+                                    </div>
+                                    <span id="issued_dateError" class="error-message" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div class="row" id="expiry_date-group" style="margin-top: 15px;">
+                                <div class="col-2" style="text-align: right; font-weight: bold;">
+                                    <label for="expiry_date">満了日</label>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                </div>
+                                <div class="col-9">
+                                    <div class="input-group flex-nowrap">
+                                        <input type="text" class="form-control datetimepicker" id="expiry_date"
+                                            name="expiry_date" placeholder="満了日を入力してください。" aria-label="Username"
+                                            aria-describedby="addon-wrapping" style="margin-bottom: 15px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="notification-group" style="margin-top: 15px;">
+                                <div class="col-2" style="text-align: right;font-weight: bold;height: 53px;">
+                                    <label>通知有無</label>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="badge bg-danger">必須</span>
+                                </div>
+                                <div class="col-9" style="margin-bottom: 15px;">
+                                    <input class="form-check-input" type="radio" id="notify-yes" name="notification"
+                                        value="on" required>
+                                    <label for="notify-yes" style="margin-right: 15px;">通知する</label>
+                                    <input class="form-check-input" type="radio" id="notify-no" name="notification"
+                                        value="off" required checked>
+                                    <label for="notify-no" style="margin-right: 15px;">通知しない</label><br>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-2" style="text-align: right; font-weight: bold;">
+                                    <label for="content">内容</label>
+                                </div>
+                                <div class="col-1" style="text-align: center;">
+                                    <span class="badge bg-danger">必須</span>
+                                </div>
+                                <div class="col-9">
+                                    <div class="mb-3">
+                                        <textarea class="form-control" id="content" name="content"
+                                            placeholder="内容を入力してください。" rows="3"></textarea>
+                                    </div>
+                                    <span id="contentError" class="error-message" style="color: red;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div><br>
+                <div class="container"
+                    style="text-align: center; display: grid;grid-auto-columns: 125px;grid-auto-flow: column;gap: 1rem;width: fit-content;">
+                    <button type="submit" class="btn btn-primary btn-lg">登録</button>
+                    <button type="submit" class="btn btn-secondary btn-lg" onclick="formReset()">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#issued_date, #expiry_date').datetimepicker({
+                format: 'Y/m/d H:i',
+                step: 30,
+                minDate: 0,
+                timepicker: true,
+                lang: 'ja',
+            });
+
+            // Show/hide fields based on publication_method option selected
+            $('input[name="publication_method"]').change(function () {
+                var publication_method = $(this).val();
+                if (publication_method === 'time') {
+                    $('#issued_date-group').show();
+                    $('#notification-group').show();
+                    $('#expiry_date-group').show();
+                    // 以下の行を追加して、発信日が必須になる
+                    //$("#issued_date").prop('required', true);
+                    // 以下の行を追加して、通知の有無が必須になる
+                    $("input[name='notification']").prop('required', true);
+                    if (issued_date === "") {
+                        $("#issued_dateError").text("ER-2 : 発信日を入力してください");
+                        event.preventDefault(); // フォーム送信を停止
+                    } else {
+                        $("#issued_dateError").text(""); // エラーメッセージをクリア
+                    }
+                } else if (publication_method === 'immediate') {
+                    $('#issued_date-group').hide();
+                    $('#notification-group').show();
+                    $('#expiry_date-group').show();
+                    // 以下の行を追加して、発信日は必須ではなくなる
+                    $("#issued_date").prop('required', false);
+                    // 以下の行を追加して、通知の有無が必須になる
+                    $("input[name='notification']").prop('required', true);
+                } else if (publication_method === 'hold') {
+                    $('#issued_date-group').hide();
+                    $('#notification-group').hide();
+                    $('#expiry_date-group').hide();
+                    // 以下の行を追加して、発信日は必須ではなくなる
+                    $("#issued_date").prop('required', false);
+                    // 以下の行を追加して、通知の有無は必須ではなくなる
+                    $("input[name='notification']").prop('required', false);
+                }
+            });
+
+        });
+
+
+        // 追加：現在の日付と曜日を表示する関数
+        function displayCurrentDate() {
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+            var day = ("0" + currentDate.getDate()).slice(-2);
+            var weekDay = ['日', '月', '火', '水', '木', '金', '土'][currentDate.getDay()];
+            var formattedDate = year + "年" + month + "月" + day + "日" + " (" + weekDay + ")";
+            $("#current-date").text(formattedDate);
+        }
+        // ページ読み込み時に現在の日付を表示
+        displayCurrentDate();
+
+
+        // フォームのリセット
+        function formReset() {
+            document.getElementById("notification-form").reset();
+        }
+
+        // フォームの送信時にvalidateForm関数を実行
+        $("#notification-form").submit(function () {
+
+            return validateForm(); // フォームが送信される前にvalidateForm関数を実行
+        });
+
+        // フォームが送信される前に、issued_dateが空の場合にデフォルト値を設定する
+        $("#notification-form").submit(function () {
+            var issued_date = $("#issued_date").val();
+            if (issued_date === "") {
+                var now = new Date();
+                now.setDate(now.getDate());
+                var year = now.getFullYear();
+                var month = String(now.getMonth() + 1).padStart(2, '0');
+                var day = String(now.getDate()).padStart(2, '0');
+                var hours = String(now.getHours()).padStart(2, '0');
+                var minutes = String(now.getMinutes()).padStart(2, '0');
+                var defaultDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
+                $("#issued_date").val(defaultDateTime);
+            }
+            return validateForm(); // フォームが送信される前にvalidateForm関数を実行
+        });
+
+        // $("#notification-form").submit(function () {
+        //     var issued_date = $("#issued_date").val();
+        //     var publication_method = $("input[name='publication_method']:checked").val(); // 選択されている公開方式を取得
+        //     if (publication_method === "immediate" && issued_date === "") { // "immediate"が選択されている場合かつissued_dateが空の場合のみ
+        //         var now = new Date();
+        //         now.setDate(now.getDate());
+        //         var year = now.getFullYear();
+        //         var month = String(now.getMonth() + 1).padStart(2, '0');
+        //         var day = String(now.getDate()).padStart(2, '0');
+        //         var hours = String(now.getHours()).padStart(2, '0');
+        //         var minutes = String(now.getMinutes()).padStart(2, '0');
+        //         var defaultDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
+        //         $("#issued_date").val(defaultDateTime);
+        //     }
+        //     return validateForm(); // フォームが送信される前にvalidateForm関数を実行
+        // });
+
+
+        // フォームが送信される前に、expiry_dateが空の場合にデフォルト値を設定する
+        $("#notification-form").submit(function () {
+            var expiry_date = $("#expiry_date").val();
+            if (expiry_date === "") {
+                var now = new Date();
+                // 1週間後の日付を計算
+                now.setDate(now.getDate() + 7);
+                var year = now.getFullYear();
+                var month = String(now.getMonth() + 1).padStart(2, '0');
+                var day = String(now.getDate()).padStart(2, '0');
+                var hours = String(now.getHours()).padStart(2, '0');
+                var minutes = String(now.getMinutes()).padStart(2, '0');
+                var defaultDateTime = `${year}/${month}/${day} ${hours}:${minutes}`;
+                $("#expiry_date").val(defaultDateTime); // 1週間後の日時をテキストフィールドに設定
+            }
+            return validateForm(); // フォームが送信される前にvalidateForm関数を実行
+        });
+
+        function validateForm() {
+            var title = $("#title").val();
+            var publication_method = $('input[name="publication_method"]:checked').val();
+            var issued_date = $("#issued_date").val();
+            var notification = $('input[name="notification"]:checked').val();
+            var content = $("#content").val();
+
+            if (title === "") {
+                titleError.textContent = "ER-1 : タイトルを入力してください";
+                event.preventDefault(); // フォーム送信を停止
+            } else {
+                titleError.textContent = ""; // エラーメッセージをクリア
+            }
+            // 発信日が必須の場合のみチェックする
+            if (publication_method === 'time') {
+                if (issued_date === "") {
+                    $("#issued_dateError").text("ER-2 : 発信日を入力してください");
+                    event.preventDefault(); // フォーム送信を停止
+                } else {
+                    $("#issued_dateError").text(""); // エラーメッセージをクリア
+                }
+            }
+
+            if (content === "") {
+                $("#contentError").text("ER-3 : 内容を入力してください");
+                event.preventDefault(); // フォーム送信を停止
+            } else {
+                $("#contentError").text(""); // エラーメッセージをクリア
+            }
+
+        }
+        // フォーム送信時にポップアップを表示する
+        $("#notification-form").submit(function (event) {
+            // フォーム送信を停止
+            event.preventDefault();
+
+            // ポップアップを表示
+            if (confirm("本当に登録しますか？")) {
+                // OKがクリックされた場合はフォームを送信
+                //alert("登録完了！！");
+                this.submit();
+            } else {
+                // キャンセルがクリックされた場合は何もしない
+                return false;
+            }
+        });
+    </script>
+</body>
+
+</html>

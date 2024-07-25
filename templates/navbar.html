@@ -1,0 +1,18 @@
+<nav class="navbar" style="background: linear-gradient(to right, #2e3647, #5ACCAE);">
+    <div class="container-fluid" >
+        <a class="navbar-brand" href="{% url 'pybo:index' %}" style="color:#eaebed">
+            <img src="https://www.gngs.co.jp/img/top/logo_about.png" width="30" height="30" class="d-inline-block align-top" alt="GOMS Logo" >
+            GOMS</a>
+        <div class="d-flex justify-content-end">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 " >
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'common:logout' %}" style="color:#eaebed">{{ user.username }} (ログアウト)</a>
+                        {% else %}
+                        <a class="nav-link" href="{% url 'common:login' %}" style="color:#eaebed">ログイン</a>
+                        {% endif %}
+                    </li>
+            </ul>
+        </div>
+    </div>
+</nav>
