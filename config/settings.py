@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%(m4+u+7qh8-vf=04@jx3)=kz)$62wmnkx3*_%ppn(otje832m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['43.201.207.154']
 
 
 # Application definition
@@ -138,3 +138,6 @@ LOGIN_REDIRECT_URL = '/'
 import pymysql
 pymysql.version_info = (1, 4, 6, 'final', 0)  # 버전 정보를 설정합니다.
 pymysql.install_as_MySQLdb()
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
